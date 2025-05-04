@@ -6,9 +6,10 @@ import Graph from '@/components/graph';
 import { parseMessages } from '@/lib/parser';
 import { analyzeRelationships } from '@/lib/analyzer';
 import { Message } from '@/types';
+import type { ElementDefinition } from 'cytoscape';
 
 export default function HomePage() {
-  const [elements, setElements] = useState<any[]>([]);
+  const [elements, setElements] = useState<ElementDefinition[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -28,7 +29,7 @@ export default function HomePage() {
         return;
       }
       setElements(graphElements);
-    } catch (e) {
+    } catch {
       setError('⚠️ エラーが発生しました。ファイル内容をご確認ください。');
     } finally {
       setLoading(false);
