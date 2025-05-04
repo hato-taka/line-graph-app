@@ -22,7 +22,7 @@ const Graph = ({ elements }: Props) => {
           style: {
             'background-color': '#f43f5e',
             'label': 'data(id)',
-            'color': '#fff',
+            'color': '#000',
             'font-size': 10,
             'text-valign': 'center',
             'text-halign': 'center',
