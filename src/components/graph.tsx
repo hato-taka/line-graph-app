@@ -1,39 +1,67 @@
 'use client';
 
-import CytoscapeComponent from 'react-cytoscapejs';
+import React, { useEffect, useRef } from 'react';
 import cytoscape from 'cytoscape';
 
-const Graph = ({ elements }: { elements: cytoscape.ElementDefinition[] }) => {
+type Props = {
+  elements: cytoscape.ElementDefinition[];
+};
+
+const Graph = ({ elements }: Props) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const cy = cytoscape({
+      container: containerRef.current,
+      elements,
+      style: [
+        {
+          selector: 'node',
+          style: {
+            'background-color': '#f43f5e',
+            'label': 'data(id)',
+            'color': '#fff',
+            'font-size': 10,
+            'text-valign': 'center',
+            'text-halign': 'center',
+            'width': 'mapData(freq, 1, 20, 30, 70)',
+            'height': 'mapData(freq, 1, 20, 30, 70)',
+            'text-wrap': 'wrap',
+          },
+        },
+        {
+          selector: 'edge',
+          style: {
+            'width': 'mapData(weight, 1, 10, 1, 6)',
+            'line-color': '#888',
+            'target-arrow-color': '#888',
+            'target-arrow-shape': 'triangle',
+            'curve-style': 'bezier',
+            'arrow-scale': 1,
+            'opacity': 0.8,
+            'label': 'data(label)',
+            'font-size': 6,
+            'color': '#333',
+            'text-rotation': 'autorotate',
+          },
+        },
+      ],
+      layout: {
+        name: 'cose',
+        animate: true,
+        animationDuration: 500,
+        fit: true,
+        padding: 30,
+      },
+    });
+
+    return () => cy.destroy();
+  }, [elements]);
+
   return (
-    <div className="w-full h-[500px] overflow-x-auto border rounded shadow-sm">
-      <CytoscapeComponent
-        elements={elements}
-        style={{ width: '100%', height: '100%' }}
-        layout={{ name: 'cose' }}
-        stylesheet={[
-          {
-            selector: 'node',
-            style: {
-              'background-color': '#f43f5e',
-              label: 'data(id)',
-              color: '#fff',
-              'text-valign': 'center',
-              'font-size': 10,
-              width: 40,
-              height: 40,
-            },
-          },
-          {
-            selector: 'edge',
-            style: {
-              width: 2,
-              'line-color': '#bbb',
-              'curve-style': 'bezier',
-            },
-          },
-        ]}
-      />
-    </div>
+    <div className="w-full h-[500px] bg-white rounded shadow border" ref={containerRef} />
   );
 };
 
