@@ -37,6 +37,7 @@ const Upload = ({ onTextLoaded }: Props) => {
       try {
         parsed = parseMessages(lines);
       } catch (err) {
+        console.error('パース中にエラーが発生:', err);
         previewLines.push('❌ パース中にエラーが発生しました');
       }
 
