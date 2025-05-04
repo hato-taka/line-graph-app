@@ -8,7 +8,7 @@ type Props = {
   onTextLoaded: (lines: string[]) => void;
 };
 
-const DEBUG_MODE = true;
+const DEBUG_MODE = process.env.NEXT_PUBLIC_DEBUG_MODE === 'true';
 
 const Upload = ({ onTextLoaded }: Props) => {
   const [debugInfo, setDebugInfo] = useState<string[]>([]);
