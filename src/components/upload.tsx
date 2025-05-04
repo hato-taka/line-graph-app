@@ -5,31 +5,47 @@ type Props = {
 };
 
 const Upload = ({ onTextLoaded }: Props) => {
-  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-    const text = await file.text();
-    const lines = text.split(/\r?\n/).filter(Boolean);
-    onTextLoaded(lines);
+    if (!file) {
+      alert('ファイルが選択されていません');
+      return;
+    }
+
+    // ファイル形式チェック
+    if (!file.name.endsWith('.txt')) {
+      alert('対応しているのは .txt ファイルのみです');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = reader.result as string;
+      const lines = text.split(/\r?\n/).filter(Boolean);
+      console.log('読み込んだ行数:', lines.length);
+      onTextLoaded(lines);
+    };
+    reader.onerror = () => {
+      alert('ファイルの読み込みに失敗しました');
+    };
+    reader.readAsText(file);
   };
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <label
-        htmlFor="file-upload"
-        className="bg-red-500 text-white py-2 px-4 rounded-full text-sm shadow-sm active:opacity-80"
-      >
-        トーク履歴を選択
-      </label>
+    <div className="flex flex-col items-center gap-3 w-full px-4">
       <input
-        id="file-upload"
         type="file"
         accept=".txt"
         onChange={handleFile}
-        className="hidden"
+        className="block w-full text-sm text-gray-700
+                   file:mr-4 file:py-2 file:px-4
+                   file:rounded-full file:border-0
+                   file:text-sm file:font-semibold
+                   file:bg-red-500 file:text-white
+                   hover:file:bg-red-600"
       />
       <p className="text-xs text-gray-500 text-center">
-        ※ LINEの「トーク履歴を送信」でエクスポートした.txtファイルを選択してください
+        LINEの「トーク履歴を送信」でエクスポートした .txt ファイルを選択してください。
       </p>
     </div>
   );
